@@ -131,7 +131,7 @@ function getPerformance(text, callback)
         var now = '';
         if (typeof window.performance.now != 'undefined')//for ie 9
             now = (window.performance.now() / 1000).toFixed(3);
-        if (typeof g_user != 'undefined')
+        if ((typeof g_user != 'undefined') && (typeof g_user.nickname != 'undefined'))
             now += ' ' + g_user.nickname;//for LJ TV Chrome browser
         text = now + ': ' + text;
     }
@@ -433,7 +433,12 @@ function getLanguageCode() {
     var parts = getLocale().toLowerCase().match(/([a-z]+)(?:-([a-z]+))?/),
         lang = parts[1],
         locale = parts[2];
-    return lang;
+    switch (lang){
+        case 'en':
+        case 'ru':
+            return lang;
+    }
+    return 'en';
 }
 
 function loadScriptSynchronous(fileName) { loadScriptBase(function(script){ script.innerHTML = getSynchronousResponse(fileName);}); }
@@ -503,46 +508,6 @@ var loadScript = function (src, onload, onerror, appendTo) {
 
         script.src = src;
     });
-/*
-    script = document.createElement('script');
-    script.setAttribute("type", 'text/javascript');
-    script.setAttribute("id", src);
-
-//    if (onload) {
-    if (script.readyState && !script.onload) {
-        // IE, Opera
-        script.onreadystatechange = function () {
-            if (script.readyState == "complete") { // на случай пропуска loaded
-                if (onload) onload(); // (2)
-            }
-
-            if (script.readyState == "loaded") {
-                setTimeout(onload, 0);  // (1)
-
-                // убираем обработчик, чтобы не сработал на complete
-                this.onreadystatechange = null;
-            }
-        }
-    }
-    else {
-        // Rest
-        function _onload() {
-            consoleLog('loadScript.onload() ' + this.src);
-            if (onload) onload();
-        }
-        script.onload = _onload;
-
-        if (onerror)
-            script.onerror = onerror;
-        else script.onerror = function () {
-            consoleError('loadScript: "' + this.src + '" failed');
-        };
-    }
-//    }
-
-    script.src = src;
-    appendTo.appendChild(script);
-*/
 }
 
 function isRussian() {
